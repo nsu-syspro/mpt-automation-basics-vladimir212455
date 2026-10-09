@@ -1,8 +1,8 @@
 CC        := gcc
 SRC_DIR   := src
-OBJ_DIR   := obj
-TEST_DIR  := test
 BUILD_DIR := build
+OBJ_DIR   := $(BUILD_DIR)/obj
+TEST_DIR  := test
 CONFIG    := config.json
 NAME      := $(shell jq -r .name $(CONFIG))
 VERSION   := $(shell jq -r .version $(CONFIG))
@@ -29,10 +29,10 @@ $(OBJ_DIR):
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-check: $(TARGET) $(TESTS) $(EXPECTED)
+check: $(TARGET)
 	@for file in $(TESTS); do \
 		exp_file="$${file%.txt}.expected"; \
-		./$(TARGET) "$$file" > .tmp_out 2>&1; \
+		./$(TARGET) < "$$file" > .tmp_out 2>&1; \
 		if ! diff -u "$$exp_file" .tmp_out; then \
 			rm -f .tmp_out; \
 			exit 1; \
@@ -41,4 +41,4 @@ check: $(TARGET) $(TESTS) $(EXPECTED)
 	@rm -f .tmp_out
 
 clean:
-	rm -rf $(OBJ_DIR) $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)

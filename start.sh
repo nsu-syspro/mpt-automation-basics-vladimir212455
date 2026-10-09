@@ -1,3 +1,3 @@
-#!/bin/sh
-APP_NAME=$(jq -r .name /app/config.json)
-exec "/app/build/$APP_NAME" "$@"
+#!/sh
+APP_NAME=$(jq -r .name config.json)
+exec "./build/$APP_NAME" "$@"

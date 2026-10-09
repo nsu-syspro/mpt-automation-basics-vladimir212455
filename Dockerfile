@@ -6,11 +6,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     jq \
     diffutils \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY . .
+
+RUN git checkout -- test/
 
 RUN make check
 
