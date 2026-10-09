@@ -10,7 +10,6 @@ TARGET    := $(BUILD_DIR)/$(NAME)
 CFLAGS    := -Wall -Wextra -Werror -DNAME='"$(NAME)"' -DVERSION='"$(VERSION)"'
 SRCS      := $(wildcard $(SRC_DIR)/*.c)
 TESTS     := $(wildcard $(TEST_DIR)/*.txt)
-EXPECTED  := $(wildcard $(TEST_DIR)/*.expected)
 OBJS      := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 .PHONY: all clean check
@@ -32,13 +31,13 @@ $(BUILD_DIR):
 check: $(TARGET)
 	@for file in $(TESTS); do \
 		exp_file="$${file%.txt}.expected"; \
-		./$(TARGET) < "$$file" > .tmp_out 2>&1; \
-		if ! diff -u "$$exp_file" .tmp_out; then \
-			rm -f .tmp_out; \
+		./$(TARGET) < "$$file" > /tmp/tmp_out 2>&1; \
+		if ! diff -u "$$exp_file" /tmp/tmp_out; then \
+			rm -f /tmp/tmp_out; \
 			exit 1; \
 		fi; \
 	done
-	@rm -f .tmp_out
+	@rm -f /tmp/tmp_out
 
 clean:
 	rm -rf $(BUILD_DIR)

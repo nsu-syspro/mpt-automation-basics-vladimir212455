@@ -6,17 +6,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     jq \
     diffutils \
-    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY . .
 
-RUN git checkout -- test/
-
 RUN make check
 
-RUN chmod +x start.sh
-
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["sh", "-c", "./build/$(jq -r .name config.json) \"$@\"", "--"]
